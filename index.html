@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP Character Sheet Prototype</title>
+    <style>
+        body { font-family: sans-serif; background: #2c3e50; color: white; padding: 20px; }
+        .sheet { background: #34495e; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; }
+        .stat-group { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        input { padding: 5px; border-radius: 4px; border: none; width: 60px; text-align: center; }
+        .readonly { background: #95a5a6; font-weight: bold; }
+        button { width: 100%; padding: 10px; background: #27ae60; border: none; color: white; border-radius: 4px; cursor: pointer; }
+        textarea { width: 100%; height: 100px; margin-top: 10px; background: #ecf0f1; }
+    </style>
+</head>
+<body>
+
+<div class="sheet">
+    <h2>Character Sheet</h2>
+    
+    <div class="stat-group">
+        <label>Character Name:</label>
+        <input type="text" id="charName" style="width: 150px;" placeholder="Hero Name">
+    </div>
+
+    <div class="stat-group">
+        <label>Strength (Base):</label>
+        <input type="number" id="strBase" value="10" oninput="calculateStats()">
+    </div>
+
+    <div class="stat-group">
+        <label>Power Modifier (+50%):</label>
+        <input type="text" id="pwrMod" class="readonly" readonly value="15">
+    </div>
+
+    <button onclick="exportCharacter()">Save to Database (Generate Code)</button>
+    
+    <p>Copy this into the archive:</p>
+    <textarea id="output" readonly></textarea>
+</div>
+
+<script>
+    // THE MATH LOGIC
+    function calculateStats() {
+        const str = parseFloat(document.getElementById('strBase').value) || 0;
+        // Example Math: Power is Strength multiplied by 1.5
+        const pwr = str * 1.5;
+        document.getElementById('pwrMod').value = pwr.toFixed(1);
+    }
+
+    // THE ARCHIVE LOGIC (JSON)
+    function exportCharacter() {
+        const characterData = {
+            name: document.getElementById('charName').value,
+            strength: document.getElementById('strBase').value,
+            power: document.getElementById('pwrMod').value,
+            timestamp: new Date().toISOString()
+        };
+        // Converts the character into a compact text string
+        document.getElementById('output').value = JSON.stringify(characterData);
+    }
+</script>
+
+</body>
+</html>
